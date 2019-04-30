@@ -63,14 +63,14 @@ def list_comments(id, answers = False):
     has_data = False
 
     # iterate over all comments and find its answers
-    for obj in data:
+    for obj in data[1:2]:
         global num_comments
         num_comments += 1
         print (str(num_comments) + " comments downloaded\r", end='')
 
         ret_json += '{\n'
-        ret_json += '"from":"' + obj["from"]["name"] + '",\n'
-        ret_json += '"from_id":"' + obj["from"]["id"] + '",\n'
+        # ret_json += '"from":"' + obj["from"]["name"] + '",\n'
+        # ret_json += '"from_id":"' + obj["from"]["id"] + '",\n'
         ret_json += '"message":"' + obj["message"] + '"'
 
         # list all answers recursively
@@ -122,7 +122,10 @@ def main():
     obj_id = mount_object_id(get_page_id(results.page_url), results.post_id)
 
     res = list_comments(obj_id)
-    open(results.file_name, "w+").write(res)
+    res = bytes(res, 'utf-8').decode('utf-8','ignore')
+    # print(res)
+    with open(results.file_name, "w+") as f:
+        f.write(res)
     print("\nDone!")
 
 
